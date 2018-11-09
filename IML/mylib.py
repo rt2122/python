@@ -153,10 +153,7 @@ def best_K(matr, k_max=0, show_work=-1, eps=0.15, d_eps=0.0001, strat_mean = Tru
     exter_min = np.zeros(k_max - 2)
     inter_mean = np.zeros(k_max - 2)
     
-    
     for e in range(k_max - 2):
-        if arr[e] == 0:
-            print("Oh no!")
         a, xc, yc = KMeans4(matr, k = arr[e])
         flag = True
         inter_num = 0
@@ -180,14 +177,13 @@ def best_K(matr, k_max=0, show_work=-1, eps=0.15, d_eps=0.0001, strat_mean = Tru
     arr = arr[:-1]
     if strat_mean:
         out = np.diff(inter_mean)
-    f = list(filter(lambda i: abs(out[i]) < eps, range(len(out1))))
+    f = list(filter(lambda i: abs(out[i]) < eps, range(len(out))))
     while len(f)==0:
         eps += d_eps
         f = list(filter(lambda i: abs(out[i]) < eps, range(len(out))))
     if show_work >= 0:
         pylab.figure(0, figsize = (15, 10))
         plt.plot(arr, out)
-        plt.scatter(arr, out, c="r")
     if strat_mean:
         return arr[f[0]], eps
     return arr[f[0] - 1], eps
@@ -196,8 +192,8 @@ def best_K(matr, k_max=0, show_work=-1, eps=0.15, d_eps=0.0001, strat_mean = Tru
 def clusters_sorted(clust, xc, yc, x_s = 0, y_s = 0):
     k = xc.shape[0]
     length = clust.shape[0]
-    clust += k
     cen_clust_sorted = sorted(list(range(k)), key = lambda i: dist(xc[i], yc[i], x_s, y_s))
+    clust += k
     for i in range(k):
         f = filter_by_clust(clust, cen_clust_sorted[i] + k, length)
         clust[f] = i
@@ -228,3 +224,4 @@ def clusters_centers(matr, clust):
         xc[i] = np.mean(x[fil])
         yc[i] = np.mean(y[fil])
     return xc, yc
+    
